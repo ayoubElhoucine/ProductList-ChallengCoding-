@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,21 +44,20 @@ fun DetailsScreen(
     val expandDetails = viewModel.expandDetails.collectAsState()
 
     Column(
-        modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        (item.image?.small)?.let { image ->
+        (if (item.image?.large.isNullOrBlank()) item.image?.small else item.image?.large)?.let { image ->
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 25.dp),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 GlideImage(
                     modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape),
+                        .fillMaxWidth()
+                        .height(200.dp),
                     imageModel = image,
+                    contentScale = ContentScale.Crop,
                     loading = {
                         Box(
                             modifier = Modifier
@@ -68,6 +70,7 @@ fun DetailsScreen(
             }
         }
         Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
             text = item.name,
             color = Color.Black,
             fontWeight = FontWeight.W600,
@@ -76,6 +79,7 @@ fun DetailsScreen(
         )
         item.description?.let { description ->
             Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 text = description,
                 color = Color.Black,
                 fontWeight = FontWeight.W400,
@@ -85,6 +89,7 @@ fun DetailsScreen(
         }
         Box(
             modifier = Modifier
+                .padding(16.dp)
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .animateContentSize()
